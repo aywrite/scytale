@@ -25,28 +25,18 @@
 /// assert_eq!("abcde", rot13(&rot13("abcde")));
 /// ```
 
+use caesar_shift::upper_caesar_shift;
+use caesar_shift::lower_caesar_shift;
+
 pub fn rot13(text: &str) -> String {
     text.chars().map(|c| {
         match c {
-            'A'...'Z' => upper_rot13(c),
-            'a'...'z' => lower_rot13(c),
+            'A'...'Z' => upper_caesar_shift(c, 13),
+            'a'...'z' => lower_caesar_shift(c, 13),
             _ => c
         }
     }).collect()
 }
-
-fn upper_rot13(c: char) -> char {
-   let mut num_c = c as u8;
-   num_c = ((num_c - 65) + 13) % 26 + 65;
-   num_c as char
-}
-
-fn lower_rot13(c: char) -> char {
-   let mut num_c = c as u8;
-   num_c = ((num_c - 97) + 13) % 26 + 97;
-   num_c as char
-}
-
 
 #[cfg(test)]
 mod tests {
