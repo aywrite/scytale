@@ -1,4 +1,4 @@
-/// Returns caesar shift encrpyted version of the input string  
+/// Returns caesar shift encrpyted version of the input string
 ///
 /// Only latin alphabet characters will be encrypted, any
 /// other characters, numbers, punctuation etc. will be left as
@@ -24,7 +24,7 @@ pub fn encrypt(text: &str, shift: u32) -> String {
     caesar_shift(text, shift)
 }
 
-/// Performs an inverse caesar shift on the input string.  
+/// Performs an inverse caesar shift on the input string.
 ///
 /// Only latin alphabet characters will be decrypted, any
 /// other characters, numbers, punctuation etc. will be left as
@@ -52,25 +52,25 @@ pub fn decrypt(text: &str, shift: u32) -> String {
 }
 
 fn caesar_shift(text: &str, shift: u8) -> String {
-    text.chars().map(|c| {
-        match c {
-            'A'...'Z' => upper_caesar_shift(c, shift),
-            'a'...'z' => lower_caesar_shift(c, shift),
-            _ => c
-        }
-    }).collect()
+    text.chars()
+        .map(|c| match c {
+                 'A'...'Z' => upper_caesar_shift(c, shift),
+                 'a'...'z' => lower_caesar_shift(c, shift),
+                 _ => c,
+             })
+        .collect()
 }
 
 pub fn upper_caesar_shift(c: char, shift: u8) -> char {
-   let mut num_c = c as u8;
-   num_c = ((num_c - 65) + shift) % 26 + 65;
-   num_c as char
+    let mut num_c = c as u8;
+    num_c = ((num_c - 65) + shift) % 26 + 65;
+    num_c as char
 }
 
 pub fn lower_caesar_shift(c: char, shift: u8) -> char {
-   let mut num_c = c as u8;
-   num_c = ((num_c - 97) + shift) % 26 + 97;
-   num_c as char
+    let mut num_c = c as u8;
+    num_c = ((num_c - 97) + shift) % 26 + 97;
+    num_c as char
 }
 
 

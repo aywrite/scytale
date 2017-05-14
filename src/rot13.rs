@@ -1,4 +1,4 @@
-/// Returns a rot13 encrpyted version of the input string  
+/// Returns a rot13 encrpyted version of the input string
 ///
 /// Only latin alphabet characters will be encrypted, any
 /// other characters, numbers, punctuation etc. will be left as
@@ -29,13 +29,13 @@ use caesar_shift::upper_caesar_shift;
 use caesar_shift::lower_caesar_shift;
 
 pub fn rot13(text: &str) -> String {
-    text.chars().map(|c| {
-        match c {
-            'A'...'Z' => upper_caesar_shift(c, 13),
-            'a'...'z' => lower_caesar_shift(c, 13),
-            _ => c
-        }
-    }).collect()
+    text.chars()
+        .map(|c| match c {
+                 'A'...'Z' => upper_caesar_shift(c, 13),
+                 'a'...'z' => lower_caesar_shift(c, 13),
+                 _ => c,
+             })
+        .collect()
 }
 
 #[cfg(test)]
@@ -55,10 +55,7 @@ mod tests {
 
     #[test]
     fn test_rot13_with_punctuation() {
-        assert_eq!(
-            "Url! Jung gvzr vf vg?",
-            rot13("Hey! What time is it?")
-        );
+        assert_eq!("Url! Jung gvzr vf vg?", rot13("Hey! What time is it?"));
     }
 
     #[test]
