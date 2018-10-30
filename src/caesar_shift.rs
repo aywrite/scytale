@@ -54,10 +54,10 @@ pub fn decrypt(text: &str, shift: u32) -> String {
 fn caesar_shift(text: &str, shift: u8) -> String {
     text.chars()
         .map(|c| match c {
-                 'A'...'Z' => upper_caesar_shift(c, shift),
-                 'a'...'z' => lower_caesar_shift(c, shift),
-                 _ => c,
-             })
+            'A'...'Z' => upper_caesar_shift(c, shift),
+            'a'...'z' => lower_caesar_shift(c, shift),
+            _ => c,
+        })
         .collect()
 }
 
@@ -72,7 +72,6 @@ pub fn lower_caesar_shift(c: char, shift: u8) -> char {
     num_c = ((num_c - 97) + shift) % 26 + 97;
     num_c as char
 }
-
 
 #[cfg(test)]
 mod caeser_tests {

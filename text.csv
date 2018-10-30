@@ -1,0 +1,11 @@
+plain,cipher
+a,12
+b,45
+
+decrypt
+1,a
+2,a
+4,b,
+5,b
+
+
