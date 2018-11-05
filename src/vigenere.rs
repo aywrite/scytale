@@ -16,8 +16,8 @@ pub struct VigenereCipher {
 }
 
 impl VigenereCipher {
-    pub fn new(key: String) -> VigenereCipher {
-        VigenereCipher { key }
+    pub fn new<T: Into<String>>(key: T) -> VigenereCipher {
+        VigenereCipher { key: key.into() }
     }
 }
 
@@ -57,64 +57,64 @@ mod encrypt_tests {
 
     #[test]
     fn test_encrypt_lowercase() {
-        let cipher = VigenereCipher::new("aaaa".to_string());
+        let cipher = VigenereCipher::new("aaaa");
         assert_eq!("abyz", cipher.encrypt("abyz"));
 
-        let cipher = VigenereCipher::new("AAAA".to_string());
+        let cipher = VigenereCipher::new("AAAA");
         assert_eq!("abyz", cipher.encrypt("abyz"));
 
-        let cipher = VigenereCipher::new("abcd".to_string());
+        let cipher = VigenereCipher::new("abcd");
         assert_eq!("acac", cipher.encrypt("abyz"));
 
-        let cipher = VigenereCipher::new("ABCD".to_string());
+        let cipher = VigenereCipher::new("ABCD");
         assert_eq!("acac", cipher.encrypt("abyz"));
 
-        let cipher = VigenereCipher::new("abyz".to_string());
+        let cipher = VigenereCipher::new("abyz");
         assert_eq!("abyz", cipher.encrypt("aaaa"));
 
-        let cipher = VigenereCipher::new("ABYZ".to_string());
+        let cipher = VigenereCipher::new("ABYZ");
         assert_eq!("abyz", cipher.encrypt("aaaa"));
 
-        let cipher = VigenereCipher::new("abyz".to_string());
+        let cipher = VigenereCipher::new("abyz");
         assert_eq!("acac", cipher.encrypt("abcd"));
 
-        let cipher = VigenereCipher::new("ABYZ".to_string());
+        let cipher = VigenereCipher::new("ABYZ");
         assert_eq!("acac", cipher.encrypt("abcd"));
     }
 
     #[test]
     fn test_encrypt_uppercase() {
-        let cipher = VigenereCipher::new("aaaa".to_string());
+        let cipher = VigenereCipher::new("aaaa");
         assert_eq!("ABYZ", cipher.encrypt("ABYZ"));
 
-        let cipher = VigenereCipher::new("AAAA".to_string());
+        let cipher = VigenereCipher::new("AAAA");
         assert_eq!("ABYZ", cipher.encrypt("ABYZ"));
 
-        let cipher = VigenereCipher::new("abcd".to_string());
+        let cipher = VigenereCipher::new("abcd");
         assert_eq!("ACAC", cipher.encrypt("ABYZ"));
 
-        let cipher = VigenereCipher::new("ABCD".to_string());
+        let cipher = VigenereCipher::new("ABCD");
         assert_eq!("ACAC", cipher.encrypt("ABYZ"));
 
-        let cipher = VigenereCipher::new("abyz".to_string());
+        let cipher = VigenereCipher::new("abyz");
         assert_eq!("ABYZ", cipher.encrypt("AAAA"));
 
-        let cipher = VigenereCipher::new("ABYZ".to_string());
+        let cipher = VigenereCipher::new("ABYZ");
         assert_eq!("ABYZ", cipher.encrypt("AAAA"));
 
-        let cipher = VigenereCipher::new("abyz".to_string());
+        let cipher = VigenereCipher::new("abyz");
         assert_eq!("ACAC", cipher.encrypt("ABCD"));
 
-        let cipher = VigenereCipher::new("ABYZ".to_string());
+        let cipher = VigenereCipher::new("ABYZ");
         assert_eq!("ACAC", cipher.encrypt("ABCD"));
     }
 
     #[test]
     fn test_key_wraps_around() {
-        let cipher = VigenereCipher::new("a".to_string());
+        let cipher = VigenereCipher::new("a");
         assert_eq!("abcdefgh", cipher.encrypt("abcdefgh"));
 
-        let cipher = VigenereCipher::new("az".to_string());
+        let cipher = VigenereCipher::new("az");
         assert_eq!("aacceegg", cipher.encrypt("abcdefgh"));
     }
 
@@ -128,64 +128,64 @@ mod decrypt_tests {
 
     #[test]
     fn test_decrypt_lowercase() {
-        let cipher = VigenereCipher::new("aaaa".to_string());
+        let cipher = VigenereCipher::new("aaaa");
         assert_eq!("abyz", cipher.decrypt("abyz"));
 
-        let cipher = VigenereCipher::new("AAAA".to_string());
+        let cipher = VigenereCipher::new("AAAA");
         assert_eq!("abyz", cipher.decrypt("abyz"));
 
-        let cipher = VigenereCipher::new("abcd".to_string());
+        let cipher = VigenereCipher::new("abcd");
         assert_eq!("abyz", cipher.decrypt("acac"));
 
-        let cipher = VigenereCipher::new("ABCD".to_string());
+        let cipher = VigenereCipher::new("ABCD");
         assert_eq!("abyz", cipher.decrypt("acac"));
 
-        let cipher = VigenereCipher::new("abyz".to_string());
+        let cipher = VigenereCipher::new("abyz");
         assert_eq!("aaaa", cipher.decrypt("abyz"));
 
-        let cipher = VigenereCipher::new("ABYZ".to_string());
+        let cipher = VigenereCipher::new("ABYZ");
         assert_eq!("aaaa", cipher.decrypt("abyz"));
 
-        let cipher = VigenereCipher::new("abyz".to_string());
+        let cipher = VigenereCipher::new("abyz");
         assert_eq!("abcd", cipher.decrypt("acac"));
 
-        let cipher = VigenereCipher::new("ABYZ".to_string());
+        let cipher = VigenereCipher::new("ABYZ");
         assert_eq!("abcd", cipher.decrypt("acac"));
     }
 
     #[test]
     fn test_decrypt_uppercase() {
-        let cipher = VigenereCipher::new("aaaa".to_string());
+        let cipher = VigenereCipher::new("aaaa");
         assert_eq!("ABYZ", cipher.decrypt("ABYZ"));
 
-        let cipher = VigenereCipher::new("AAAA".to_string());
+        let cipher = VigenereCipher::new("AAAA");
         assert_eq!("ABYZ", cipher.decrypt("ABYZ"));
 
-        let cipher = VigenereCipher::new("abcd".to_string());
+        let cipher = VigenereCipher::new("abcd");
         assert_eq!("ABYZ", cipher.decrypt("ACAC"));
 
-        let cipher = VigenereCipher::new("ABCD".to_string());
+        let cipher = VigenereCipher::new("ABCD");
         assert_eq!("ABYZ", cipher.decrypt("ACAC"));
 
-        let cipher = VigenereCipher::new("abyz".to_string());
+        let cipher = VigenereCipher::new("abyz");
         assert_eq!("AAAA", cipher.decrypt("ABYZ"));
 
-        let cipher = VigenereCipher::new("ABYZ".to_string());
+        let cipher = VigenereCipher::new("ABYZ");
         assert_eq!("AAAA", cipher.decrypt("ABYZ"));
 
-        let cipher = VigenereCipher::new("abyz".to_string());
+        let cipher = VigenereCipher::new("abyz");
         assert_eq!("ABCD", cipher.decrypt("ACAC"));
 
-        let cipher = VigenereCipher::new("ABYZ".to_string());
+        let cipher = VigenereCipher::new("ABYZ");
         assert_eq!("ABCD", cipher.decrypt("ACAC"));
     }
 
     #[test]
     fn test_key_wraps_around() {
-        let cipher = VigenereCipher::new("a".to_string());
+        let cipher = VigenereCipher::new("a");
         assert_eq!("abcdefgh", cipher.decrypt("abcdefgh"));
 
-        let cipher = VigenereCipher::new("az".to_string());
+        let cipher = VigenereCipher::new("az");
         assert_eq!("abcdefgh", cipher.decrypt("aacceegg"));
     }
 
