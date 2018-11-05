@@ -7,6 +7,7 @@
 //!
 //! ```
 //! use scytale::substitution::SubstitutionCipher;
+//! use scytale::text_cipher::TextCipher;
 //! use std::collections::HashMap;
 //!
 //! let mut key: HashMap<char, String> = HashMap::new();
@@ -16,7 +17,10 @@
 //! assert_eq!("hey! world", cipher.encrypt("aaaa bbbbb"));
 //! assert_eq!("aaaa bbbbb", cipher.decrypt("hey! world"));
 //! ```
+extern crate csv;
+
 use std::collections::HashMap;
+use text_cipher::TextCipher;
 
 #[derive(Debug, Clone)]
 pub struct SubstitutionCipher {
@@ -28,7 +32,25 @@ impl SubstitutionCipher {
         SubstitutionCipher { key }
     }
 
-    pub fn encrypt(&self, text: &str) -> String {
+    pub fn from_csv(key: &str) -> SubstitutionCipher {
+        #[derive(Debug, Deserialize)]
+        struct Record {
+            key: char,
+            values: String,
+        }
+        let mut rdr = csv::Reader::from_path(key).unwrap();
+        let mut keymap = HashMap::new();
+        for result in rdr.deserialize() {
+            let record: Record = result.unwrap();
+            keymap.insert(record.key, record.values);
+        }
+
+        SubstitutionCipher { key: keymap }
+    }
+}
+
+impl TextCipher for SubstitutionCipher {
+    fn encrypt(&self, text: &str) -> String {
         text.chars()
             .enumerate()
             .map(|(i, c)| match self.key.get(&c) {
@@ -38,7 +60,7 @@ impl SubstitutionCipher {
             .collect()
     }
 
-    pub fn decrypt(&self, text: &str) -> String {
+    fn decrypt(&self, text: &str) -> String {
         let mut map2 = HashMap::new();
         for (k, v) in self.key.clone() {
             for c in v.chars() {
@@ -59,6 +81,7 @@ mod decrypt_tests {
 
     use std::collections::HashMap;
     use substitution::SubstitutionCipher;
+    use text_cipher::TextCipher;
 
     #[test]
     fn test_decrypt() {
@@ -75,6 +98,7 @@ mod encrypt_tests {
 
     use std::collections::HashMap;
     use substitution::SubstitutionCipher;
+    use text_cipher::TextCipher;
 
     #[test]
     fn test_encrypt() {

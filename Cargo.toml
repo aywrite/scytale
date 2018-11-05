@@ -5,3 +5,7 @@ authors = ["awright502 <andrew.wright502@gmail.com>"]
 
 [dependencies]
 rand='*'
+serde='*'
+serde_derive='*'
+csv='*'
+ngrams='1.0.1'

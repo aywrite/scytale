@@ -11,18 +11,6 @@
 /// - text (String): The text to be encrypted
 /// - shift (integer): The value to be added to each character
 ///
-/// # Examples
-///
-/// ```
-/// use scytale::caesar_shift::encrypt;
-/// use scytale::caesar_shift::decrypt;
-///
-/// ```
-
-pub fn encrypt(text: &str, shift: u32) -> String {
-    let shift = (shift % 26) as u8;
-    caesar_shift(text, shift)
-}
 
 /// Performs an inverse caesar shift on the input string.
 ///
@@ -38,17 +26,29 @@ pub fn encrypt(text: &str, shift: u32) -> String {
 /// - shift (integer): The value to be subtracted from each character
 ///     this should be the same value that was used to encrypt.
 ///
-/// # Examples
-///
-/// ```
-/// use scytale::caesar_shift::encrypt;
-/// use scytale::caesar_shift::decrypt;
-///
-/// ```
+use text_cipher::TextCipher;
 
-pub fn decrypt(text: &str, shift: u32) -> String {
-    let shift = 26 - (shift % 26) as u8;
-    caesar_shift(text, shift)
+#[derive(Debug, Clone)]
+pub struct CaesarCipher {
+    key: u32,
+}
+
+impl CaesarCipher {
+    pub fn new(key: u32) -> CaesarCipher {
+        CaesarCipher { key }
+    }
+}
+
+impl TextCipher for CaesarCipher {
+    fn encrypt(&self, text: &str) -> String {
+        let shift = (self.key % 26) as u8;
+        caesar_shift(text, shift)
+    }
+
+    fn decrypt(&self, text: &str) -> String {
+        let shift = 26 - (self.key % 26) as u8;
+        caesar_shift(text, shift)
+    }
 }
 
 fn caesar_shift(text: &str, shift: u8) -> String {
@@ -101,24 +101,43 @@ mod caeser_tests {
 #[cfg(test)]
 mod encrypt_tests {
 
-    use caesar_shift::encrypt;
+    use caesar_shift::CaesarCipher;
+    use text_cipher::TextCipher;
 
     #[test]
     fn test_encrypt_lowercase() {
-        assert_eq!("abyz", encrypt("abyz", 0));
-        assert_eq!("bcza", encrypt("abyz", 1));
-        assert_eq!("nolm", encrypt("abyz", 13));
-        assert_eq!("zaxy", encrypt("abyz", 25));
-        assert_eq!("abyz", encrypt("abyz", 26));
+        let cipher = CaesarCipher::new(0);
+        assert_eq!("abyz", cipher.encrypt("abyz"));
+
+        let cipher = CaesarCipher::new(1);
+        assert_eq!("bcza", cipher.encrypt("abyz"));
+
+        let cipher = CaesarCipher::new(13);
+        assert_eq!("nolm", cipher.encrypt("abyz"));
+
+        let cipher = CaesarCipher::new(25);
+        assert_eq!("zaxy", cipher.encrypt("abyz"));
+
+        let cipher = CaesarCipher::new(26);
+        assert_eq!("abyz", cipher.encrypt("abyz"));
     }
 
     #[test]
     fn test_encrypt_uppercase() {
-        assert_eq!("ABYZ", encrypt("ABYZ", 0));
-        assert_eq!("BCZA", encrypt("ABYZ", 1));
-        assert_eq!("NOLM", encrypt("ABYZ", 13));
-        assert_eq!("ZAXY", encrypt("ABYZ", 25));
-        assert_eq!("ABYZ", encrypt("ABYZ", 26));
+        let cipher = CaesarCipher::new(0);
+        assert_eq!("ABYZ", cipher.encrypt("ABYZ"));
+
+        let cipher = CaesarCipher::new(1);
+        assert_eq!("BCZA", cipher.encrypt("ABYZ"));
+
+        let cipher = CaesarCipher::new(13);
+        assert_eq!("NOLM", cipher.encrypt("ABYZ"));
+
+        let cipher = CaesarCipher::new(25);
+        assert_eq!("ZAXY", cipher.encrypt("ABYZ"));
+
+        let cipher = CaesarCipher::new(26);
+        assert_eq!("ABYZ", cipher.encrypt("ABYZ"));
     }
 
 }
@@ -126,24 +145,42 @@ mod encrypt_tests {
 #[cfg(test)]
 mod decrypt_tests {
 
-    use caesar_shift::decrypt;
+    use caesar_shift::CaesarCipher;
+    use caesar_shift::TextCipher;
 
     #[test]
     fn test_decrypt_lowercase() {
-        assert_eq!("abyz", decrypt("abyz", 0));
-        assert_eq!("abyz", decrypt("bcza", 1));
-        assert_eq!("abyz", decrypt("nolm", 13));
-        assert_eq!("abyz", decrypt("zaxy", 25));
-        assert_eq!("abyz", decrypt("abyz", 26));
+        let cipher = CaesarCipher::new(0);
+        assert_eq!("abyz", cipher.decrypt("abyz"));
+
+        let cipher = CaesarCipher::new(1);
+        assert_eq!("abyz", cipher.decrypt("bcza"));
+
+        let cipher = CaesarCipher::new(13);
+        assert_eq!("abyz", cipher.decrypt("nolm"));
+
+        let cipher = CaesarCipher::new(25);
+        assert_eq!("abyz", cipher.decrypt("zaxy"));
+
+        let cipher = CaesarCipher::new(26);
+        assert_eq!("abyz", cipher.decrypt("abyz"));
     }
 
     #[test]
     fn test_decrypt_uppercase() {
-        assert_eq!("ABYZ", decrypt("ABYZ", 0));
-        assert_eq!("ABYZ", decrypt("BCZA", 1));
-        assert_eq!("ABYZ", decrypt("NOLM", 13));
-        assert_eq!("ABYZ", decrypt("ZAXY", 25));
-        assert_eq!("ABYZ", decrypt("ABYZ", 26));
-    }
+        let cipher = CaesarCipher::new(0);
+        assert_eq!("ABYZ", cipher.decrypt("ABYZ"));
 
+        let cipher = CaesarCipher::new(1);
+        assert_eq!("ABYZ", cipher.decrypt("BCZA"));
+
+        let cipher = CaesarCipher::new(13);
+        assert_eq!("ABYZ", cipher.decrypt("NOLM"));
+
+        let cipher = CaesarCipher::new(25);
+        assert_eq!("ABYZ", cipher.decrypt("ZAXY"));
+
+        let cipher = CaesarCipher::new(26);
+        assert_eq!("ABYZ", cipher.decrypt("ABYZ"));
+    }
 }
